@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 """Sección 1 — Fundamentos de la lógica digital (diapositivas 1-24)."""
 import os
-from theme import SRC, GEN
+import theme
+from theme import SRC
 
 
 def p(name):
-    return os.path.join(GEN, name + ".png")
+    return os.path.join(theme.GEN, name + ".png")
 
 
 def s(name):

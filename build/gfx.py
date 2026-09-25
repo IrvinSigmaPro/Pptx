@@ -5,7 +5,7 @@ from PIL import Image, ImageDraw, ImageFilter
 import theme
 from theme import COL, hexcol, PIL_FONT, PXIN
 
-GEN = os.path.join(theme.ASSETS, "gen")
+GEN = os.path.join(theme.ASSETS, "gen")   # valor por defecto
 SCALE = 3  # supersampling
 
 
@@ -98,8 +98,8 @@ class Draw:
         self.img.alpha_composite(img, (int(self.P(cx) - img.width / 2), int(self.P(cy) - img.height / 2)))
 
     def save(self, name):
-        os.makedirs(GEN, exist_ok=True)
-        path = os.path.join(GEN, name if name.endswith(".png") else name + ".png")
+        os.makedirs(theme.GEN, exist_ok=True)
+        path = os.path.join(theme.GEN, name if name.endswith(".png") else name + ".png")
         self.img.resize((self.img.width // 1, self.img.height // 1), Image.LANCZOS).save(path)
         return path
 
@@ -880,7 +880,7 @@ def hero_sections():
 def build_all():
     gates(); waveform_set(); pinouts(); adders(); mux_demux(); sequential()
     seven_seg(); electrical(); families(); misc(); hero_sections()
-    files = sorted(os.listdir(GEN))
+    files = sorted(os.listdir(theme.GEN))
     return files
 
 

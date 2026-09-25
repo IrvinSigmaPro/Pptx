@@ -66,6 +66,15 @@ PIL_FONT = {
 }
 
 
+from theme_patch import set_palette, is_dark, PALETTES   # noqa: E402
+
+
+def set_gen(name):
+    """Cambia la carpeta de diagramas generados (gen oscura / gen_light clara)."""
+    global GEN
+    GEN = os.path.join(ASSETS, name)
+
+
 def hexcol(name_or_hex, alpha=None):
     """Devuelve (r,g,b) o (r,g,b,a) a partir de un nombre del tema o '#RRGGBB'."""
     v = COL.get(name_or_hex, name_or_hex)

@@ -72,12 +72,14 @@ def clean(groups, max_steps=MAX_STEPS):
 def slide_hero(c, meta, idx, total, p):
     g = Groups()
     img = p.get("img")
+    import theme
     c.rect(0, 0, SLIDE_W, SLIDE_H, fill="bg", kind="bg")
     if img:
         c.image(img, 6.30, 0, SLIDE_W - 6.30, SLIDE_H, mode="cover")
-        c.rect(6.30, 0, SLIDE_W - 6.30, SLIDE_H, fill="bg", alpha=0.30, kind="deco")
-        c.rect(6.30, 0, 0.60, SLIDE_H, fill="bg", alpha=0.86, kind="deco")
-    c.blob(2.4, 5.9, 3.0, meta["accent"], alpha=0.14)
+        if theme.is_dark():
+            c.rect(6.30, 0, SLIDE_W - 6.30, SLIDE_H, fill="bg", alpha=0.30, kind="deco")
+        c.rect(6.30, 0, 0.55, SLIDE_H, fill="bg", alpha=0.92, kind="deco")
+    c.blob(2.4, 5.9, 3.0, meta["accent"], alpha=0.14 if theme.is_dark() else 0.10)
     c.rect(0, 0, SLIDE_W, 0.07, fill=meta["accent"], kind="deco")
     head = [c.text(X0, 0.85, 6.0, 0.3, p["kicker"], size=11, color=meta["accent"], bold=True,
                    font="mono", spacing=1.0)]
@@ -88,6 +90,9 @@ def slide_hero(c, meta, idx, total, p):
     g.head(head)
     kp = kpi_row(c, X0, 5.75, 6.1, p["stats"], accent=meta["accent"], h=1.0, size=9.5)
     g.play(kp, effect="rise", per=4)
+    if img and not theme.is_dark():
+        c.rect(6.30, FOOTER_Y - 0.14, SLIDE_W - 6.30, SLIDE_H - FOOTER_Y + 0.14,
+               fill="bg", alpha=0.90, kind="deco")
     c.line(X0, FOOTER_Y, SLIDE_W - MARGIN, FOOTER_Y, color="line", lw=0.75)
     c.text(X0, FOOTER_Y + 0.07, 8.0, 0.24, p.get("foot", "Electrónica Digital · Guía técnica de la Serie 74XX"),
            size=8.5, color="txt3", spacing=1.0)
@@ -101,7 +106,8 @@ def slide_section(c, meta, idx, total, p):
     head, foot, _ = frame(c, meta, idx, total)
     g.head(head)
     acc = meta["accent"]
-    c.rect(0, 1.30, SLIDE_W, SLIDE_H - 1.30, fill="bg2", alpha=0.6, kind="deco")
+    import theme
+    c.rect(0, 1.30, SLIDE_W, SLIDE_H - 1.30, fill="bg2", alpha=0.6 if theme.is_dark() else 0.9, kind="deco")
     big = [c.text(X0, 1.75, 4.6, 1.9, meta["num"], size=88, color=acc, bold=True, font="mono", spacing=0.9)]
     big.append(c.text(X0, 3.62, 6.4, 1.0, meta["name"], size=30, color="txt", bold=True, spacing=0.95))
     big.append(c.rect(X0, 4.78, 1.8, 0.05, fill=acc, kind="deco"))
@@ -579,8 +585,9 @@ def slide_contact(c, meta, idx, total, p):
     g = Groups()
     c.rect(0, 0, SLIDE_W, SLIDE_H, fill="bg", kind="bg")
     if p.get("img"):
+        import theme
         c.image(p["img"], 0, 0, SLIDE_W, SLIDE_H, mode="cover")
-        c.rect(0, 0, SLIDE_W, SLIDE_H, fill="bg", alpha=0.70, kind="deco")
+        c.rect(0, 0, SLIDE_W, SLIDE_H, fill="bg", alpha=0.70 if theme.is_dark() else 0.80, kind="deco")
     c.blob(6.6, 3.9, 3.4, meta["accent"], alpha=0.16)
     c.rect(0, 0, SLIDE_W, 0.07, fill=meta["accent"], kind="deco")
     els = [c.text(X0, 1.75, W_FULL, 0.9, p["title"], size=44, color="txt", bold=True,

@@ -32,9 +32,14 @@ def frame(c, meta, idx, total, title=None, lead=None, kicker=None, effect="fade"
     num = meta["num"]
 
     # fondo
+    import theme as _t
     c.rect(0, 0, SLIDE_W, SLIDE_H, fill="bg", kind="bg")
-    c.blob(SLIDE_W - 1.1, 0.35, 3.0, accent, alpha=0.16)
-    c.blob(0.15, SLIDE_H - 0.4, 2.4, accent, alpha=0.07)
+    if _t.is_dark():
+        c.blob(SLIDE_W - 1.1, 0.35, 3.0, accent, alpha=0.16)
+        c.blob(0.15, SLIDE_H - 0.4, 2.4, accent, alpha=0.07)
+    else:
+        c.blob(SLIDE_W - 1.0, 0.30, 2.6, accent, alpha=0.12)
+        c.rect(0, 0, SLIDE_W, 0.055, fill=accent, kind="deco")
     # barra superior de acento
     head = []
     head.append(c.rect(0, 0, SLIDE_W, 0.055, fill=accent, kind="deco"))

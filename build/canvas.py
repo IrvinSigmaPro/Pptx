@@ -137,7 +137,8 @@ class PilCanvas:
         self.d = ImageDraw.Draw(self.layer)
         self.elements = []
         self.total = total
-        self._id = 100
+        self.hidden = set()       # ids que no se dibujan (usado por el generador de GIF)
+        self._id = 1              # la primera forma del PPTX recibe el id 2
 
     # -- helpers
     def px(self, v):
@@ -152,14 +153,20 @@ class PilCanvas:
     def _accent(self, key, fallback="cyan"):
         return self.accent if key == "@accent" else (key or fallback)
 
-    def register(self, x, y, w, h, kind, text=""):
+    def visible(self):
+        """Avanza el contador (igual que los shape_id del PPTX) y dice si se dibuja."""
         self._id += 1
+        return self._id not in self.hidden
+
+    def register(self, x, y, w, h, kind, text=""):
         el = {"id": self._id, "x": x, "y": y, "w": w, "h": h, "kind": kind, "text": text}
         self.elements.append(el)
         return el
 
     # -- primitivas
     def blob(self, cx, cy, r, color, alpha=0.20):
+        if not self.visible():
+            return None
         img = Image.new("RGBA", (int(r * 2 * PXIN), int(r * 2 * PXIN)), (0, 0, 0, 0))
         dr = ImageDraw.Draw(img)
         dr.ellipse([0, 0, img.width - 1, img.height - 1], fill=self._rgba(color, alpha))
@@ -167,6 +174,8 @@ class PilCanvas:
         self.layer.alpha_composite(img, (int(cx * PXIN - img.width / 2), int(cy * PXIN - img.height / 2)))
 
     def rect(self, x, y, w, h, fill=None, line=None, lw=1.0, radius=0.0, alpha=None, kind="rect", text=""):
+        if not self.visible():
+            return None
         xy = [self.px(x), self.px(y), self.px(x + w), self.px(y + h)]
         rad = self.px(radius)
         if fill:
@@ -176,6 +185,8 @@ class PilCanvas:
         return self.register(x, y, w, h, kind, text)
 
     def circle(self, cx, cy, r, fill=None, line=None, lw=1.0, alpha=None):
+        if not self.visible():
+            return None
         xy = [self.px(cx - r), self.px(cy - r), self.px(cx + r), self.px(cy + r)]
         if fill:
             self.d.ellipse(xy, fill=self._rgba(fill, alpha))
@@ -184,6 +195,8 @@ class PilCanvas:
         return self.register(cx - r, cy - r, 2 * r, 2 * r, "circle")
 
     def line(self, x1, y1, x2, y2, color="line", lw=1.5, dash=False, alpha=None):
+        if not self.visible():
+            return None
         if dash:
             n = max(2, int(((x2 - x1) ** 2 + (y2 - y1) ** 2) ** 0.5 / 0.12))
             for i in range(n):
@@ -199,6 +212,8 @@ class PilCanvas:
     def text(self, x, y, w, h, s, size=14, color="txt2", bold=False, font="body",
              align="l", anchor="t", spacing=1.12, alpha=None, shrink=True, kind="text"):
         if not s:
+            return None
+        if not self.visible():
             return None
         runs = parse_markup(s) if isinstance(s, str) else s
         size = autosize(runs, w, h, size, bold, font == "mono", spacing) if shrink else size
@@ -232,6 +247,8 @@ class PilCanvas:
         return self.register(x, y, w, h, kind, s)
 
     def image(self, path, x, y, w, h, mode="cover", radius=0.0, border=None):
+        if not self.visible():
+            return None
         im = Image.open(path).convert("RGB")
         if mode == "auto":
             mode = auto_mode(path, w, h)

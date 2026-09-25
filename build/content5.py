@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 """Sección 5 — Práctica de laboratorio y diagnóstico de fallas."""
 import os
-from theme import SRC, GEN
+import theme
+from theme import SRC
 
 
 def p(n):
-    return os.path.join(GEN, n + ".png")
+    return os.path.join(theme.GEN, n + ".png")
 
 
 def s(n):

@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 """Sección 2 — Compuertas lógicas y chips 74XX."""
 import os
-from theme import SRC, GEN
+import theme
+from theme import SRC
 
 
 def p(n):
-    return os.path.join(GEN, n + ".png")
+    return os.path.join(theme.GEN, n + ".png")
 
 
 def s(n):
