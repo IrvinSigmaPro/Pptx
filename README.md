@@ -8,13 +8,10 @@ PowerPoint** en las 100 láminas.
 
 | Archivo | Contenido |
 |---|---|
-| `Compuertas Lógicas y Chips Serie 74XX - Versión Mejorada.pptx` | **Versión 1 (tema oscuro)**: 100 diapositivas, 16:9, transiciones y animaciones, notas del expositor |
-| `Compuertas Lógicas y Chips Serie 74XX - Versión Mejorada (Fondo Claro).pptx` | **Versión 2 (tema claro)**: mismo contenido y mismas animaciones, pensada para proyector con mucha luz o para imprimir |
-| `_preview/animacion_diapositiva_013.gif` y `..._084.gif` | **GIF animados** que muestran las entradas por clic de una diapositiva (para revisar la animación sin abrir PowerPoint) |
+| `Compuertas Lógicas y Chips Serie 74XX - Versión Mejorada.pptx` | **Presentación final**: 100 diapositivas, 16:9, transiciones y animaciones, notas del expositor en cada lámina |
 | `Compuertas Lógicas y Chips Serie 74XX - Vista Previa (100 diapositivas).pdf` | Vista previa imprimible del deck completo (render de alta fidelidad) |
-| `_preview/slide_001.jpg … slide_100.jpg` | Vista previa de la versión oscura (una imagen por diapositiva) |
-| `_preview_claro/slide_001.jpg … slide_100.jpg` | Vista previa de la versión clara |
-| `_preview/indice_general.jpg` y `_preview_claro/indice_general.jpg` | Hojas de contactos con las 100 láminas de cada versión |
+| `_preview/slide_001.jpg … slide_100.jpg` | Vista previa individual de cada diapositiva (para revisar sin abrir PowerPoint) |
+| `_preview/indice_general.jpg` | Hoja de contactos con las 100 láminas |
 | `Compuertas Lógicas y Chips Serie 74XX (1).pptx` | Archivo original del usuario (13 diapositivas), conservado sin cambios |
 
 ## Estructura del contenido (6 bloques)
@@ -51,16 +48,11 @@ PowerPoint** en las 100 láminas.
 
 ```bash
 cd build
-python3 gfx.py                   # regenera los 57 diagramas del tema oscuro (_assets/gen)
-python3 build_all.py             # versión 1 (oscura): PPTX + vista previa en _preview/
-python3 build_all.py --light     # versión 2 (clara): PPTX + vista previa en _preview_claro/
-python3 build_all.py --gif       # añade los GIF que muestran las animaciones
+python3 gfx.py          # regenera los 47 diagramas en _assets/gen
+python3 build_all.py    # construye el PPTX y la vista previa (_preview/*.jpg)
 python3 build_all.py --pptx      # solo el PPTX
 python3 build_all.py --preview   # solo las imágenes de vista previa
 ```
-
-Los diagramas del tema claro se regeneran automáticamente al construir con `--light`
-(se guardan en `_assets/gen_light` con la paleta clara).
 
 Requiere `python-pptx` y `Pillow`. La capa de diseño (`layouts.py`, `deck.py`) es común a los dos
 "backends" (`canvas.py`): el mismo código produce el PPTX animado y la imagen de vista previa,
