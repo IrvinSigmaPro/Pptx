@@ -14,6 +14,17 @@ PowerPoint** en las 100 láminas.
 | `_preview/indice_general.jpg` | Hoja de contactos con las 100 láminas |
 | `Compuertas Lógicas y Chips Serie 74XX (1).pptx` | Archivo original del usuario (13 diapositivas), conservado sin cambios |
 
+
+## Descarga directa (GitHub)
+
+| Versión | Enlace |
+|---|---|
+| **Tema oscuro (animado)** — `PPT-Compuertas-74XX-100-diapositivas-animado.pptx` | https://github.com/IrvinSigmaPro/Pptx/raw/arena/01a0d8f4-pptx/PPT-Compuertas-74XX-100-diapositivas-animado.pptx |
+| **Tema claro para proyector** — `PPT-Compuertas-74XX-100-diapositivas-FONDO-CLARO.pptx` | https://github.com/IrvinSigmaPro/Pptx/raw/arena/01a0d8f4-pptx/PPT-Compuertas-74XX-100-diapositivas-FONDO-CLARO.pptx |
+| PDF vista previa (oscuro) | https://github.com/IrvinSigmaPro/Pptx/raw/arena/01a0d8f4-pptx/PDF-Vista-Previa-100-diapositivas.pdf |
+| PDF vista previa (claro) | https://github.com/IrvinSigmaPro/Pptx/raw/arena/01a0d8f4-pptx/PDF-Vista-Previa-FONDO-CLARO.pdf |
+| GIF de animaciones de ejemplo | https://github.com/IrvinSigmaPro/Pptx/raw/arena/01a0d8f4-pptx/GIF-animacion-ejemplo-1.gif |
+
 ## Estructura del contenido (6 bloques)
 
 | Sección | Diapositivas | Tema |
