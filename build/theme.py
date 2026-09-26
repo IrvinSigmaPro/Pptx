@@ -5,7 +5,9 @@ import os
 # ---------------------------------------------------------------- geometría
 IN = 914400.0                 # EMU por pulgada
 PXIN = 96.0                   # px por pulgada en el renderizador de vista previa
-SLIDE_W = 13.3333             # pulgadas (16:9)
+# 16:9 canónico: 13.333… in = 12 192 000 EMU. Un valor redondeado
+# (13.3333) deja cx en 12 191 969 y PowerPoint marca el archivo para reparar.
+SLIDE_W = 12192000 / 914400.0     # pulgadas (16:9)
 SLIDE_H = 7.5
 MARGIN = 0.52                 # margen lateral seguro
 FOOTER_Y = 6.98

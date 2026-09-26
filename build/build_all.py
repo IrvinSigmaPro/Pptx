@@ -75,8 +75,47 @@ def build_pptx(specs, path):
     core.author = "Presentación ampliada"
     core.comments = ("Versión ampliada a %d diapositivas con transiciones y animaciones de "
                      "entrada en cada lámina." % total)
+    _finalize_ooxml(prs)
     prs.save(path)
     return total
+
+
+
+
+def _finalize_ooxml(prs):
+    """Evita el diálogo de reparación de PowerPoint al abrir el PPTX.
+
+    python-pptx deja dos incoherencias que PowerPoint (y Keynote) rechazan:
+    - p:sldSz sigue diciendo type="screen4x3" aunque el lienzo es 16:9, y cx
+      no coincide con el valor canónico 12192000.
+    - al crear notas del expositor agrega la relación notesMaster, pero no
+      escribe p:notesMasterIdLst en presentation.xml (ECMA-376).
+    """
+    from lxml import etree
+    from pptx.oxml.ns import qn
+    from pptx.opc.constants import RELATIONSHIP_TYPE as RT
+
+    sldSz = prs.element.find(qn("p:sldSz"))
+    if sldSz is not None:
+        sldSz.set("cx", "12192000")
+        sldSz.set("cy", "6858000")
+        sldSz.set("type", "screen16x9")
+
+    rid = None
+    for rel in prs.part.rels.values():
+        if rel.reltype == RT.NOTES_MASTER:
+            rid = rel.rId
+            break
+    if not rid or prs.element.find(qn("p:notesMasterIdLst")) is not None:
+        return
+    lst = etree.Element(qn("p:notesMasterIdLst"))
+    item = etree.SubElement(lst, qn("p:notesMasterId"))
+    item.set(qn("r:id"), rid)
+    master = prs.element.find(qn("p:sldMasterIdLst"))
+    if master is not None:
+        master.addnext(lst)
+    else:
+        prs.element.insert(0, lst)
 
 
 # ------------------------------------------------------------------ PREVIEW
