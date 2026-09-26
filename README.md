@@ -19,11 +19,13 @@ PowerPoint** en las 100 láminas.
 
 | Versión | Enlace |
 |---|---|
-| **Tema oscuro (animado)** — `PPT-Compuertas-74XX-100-diapositivas-animado.pptx` | https://github.com/IrvinSigmaPro/Pptx/raw/arena/01a0d8f4-pptx/PPT-Compuertas-74XX-100-diapositivas-animado.pptx |
-| **Tema claro para proyector** — `PPT-Compuertas-74XX-100-diapositivas-FONDO-CLARO.pptx` | https://github.com/IrvinSigmaPro/Pptx/raw/arena/01a0d8f4-pptx/PPT-Compuertas-74XX-100-diapositivas-FONDO-CLARO.pptx |
-| PDF vista previa (oscuro) | https://github.com/IrvinSigmaPro/Pptx/raw/arena/01a0d8f4-pptx/PDF-Vista-Previa-100-diapositivas.pdf |
-| PDF vista previa (claro) | https://github.com/IrvinSigmaPro/Pptx/raw/arena/01a0d8f4-pptx/PDF-Vista-Previa-FONDO-CLARO.pdf |
-| GIF de animaciones de ejemplo | https://github.com/IrvinSigmaPro/Pptx/raw/arena/01a0d8f4-pptx/GIF-animacion-ejemplo-1.gif |
+| **Tema oscuro (animado)** — `PPT-Compuertas-74XX-100-diapositivas-animado.pptx` | https://github.com/IrvinSigmaPro/Pptx/raw/arena/01a0dae5-pptx/PPT-Compuertas-74XX-100-diapositivas-animado.pptx |
+| **Tema claro para proyector** — `PPT-Compuertas-74XX-100-diapositivas-FONDO-CLARO.pptx` | https://github.com/IrvinSigmaPro/Pptx/raw/arena/01a0dae5-pptx/PPT-Compuertas-74XX-100-diapositivas-FONDO-CLARO.pptx |
+| PDF vista previa (oscuro) | https://github.com/IrvinSigmaPro/Pptx/raw/arena/01a0dae5-pptx/PDF-Vista-Previa-100-diapositivas.pdf |
+| PDF vista previa (claro) | https://github.com/IrvinSigmaPro/Pptx/raw/arena/01a0dae5-pptx/PDF-Vista-Previa-FONDO-CLARO.pdf |
+| GIF de animaciones de ejemplo | https://github.com/IrvinSigmaPro/Pptx/raw/arena/01a0dae5-pptx/GIF-animacion-ejemplo-1.gif |
+
+Los PPTX de esta rama ya abren en PowerPoint sin el aviso de reparación.
 
 ## Estructura del contenido (6 bloques)
 
