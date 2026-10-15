@@ -178,6 +178,9 @@ def table_block(c, x, y, w, header, rows, widths=None, size=11, accent="cyan", r
     """Tabla con encabezado y franjas. Devuelve lista de filas (cada fila = elementos)."""
     if widths is None:
         widths = [1.0 / len(header)] * len(header)
+    if sum(widths) > 1.5:                 # se pasaron en pulgadas u otra unidad: normalizar
+        tot = float(sum(widths))
+        widths = [x / tot for x in widths]
     cw = [w * f for f in widths]
     out = []
     head = []

@@ -153,6 +153,22 @@ class PilCanvas:
     def _accent(self, key, fallback="cyan"):
         return self.accent if key == "@accent" else (key or fallback)
 
+    def _blend(self, bbox, draw_fn):
+        """Compone una forma translúcida sobre la capa.
+
+        ImageDraw reemplaza el pixel (incluido su alfa) al rellenar, por lo que un
+        rectangulo semitransparente borraria lo que hay debajo (p. ej. una foto).
+        Se dibuja en una capa temporal y se fusiona con alpha_composite.
+        """
+        pad = 4
+        x0 = int(max(0, bbox[0] - pad)); y0 = int(max(0, bbox[1] - pad))
+        x1 = int(min(self.layer.width, bbox[2] + pad)); y1 = int(min(self.layer.height, bbox[3] + pad))
+        if x1 <= x0 or y1 <= y0:
+            return
+        tmp = Image.new("RGBA", (x1 - x0, y1 - y0), (0, 0, 0, 0))
+        draw_fn(ImageDraw.Draw(tmp), x0, y0)
+        self.layer.alpha_composite(tmp, (x0, y0))
+
     def visible(self):
         """Avanza el contador (igual que los shape_id del PPTX) y dice si se dibuja."""
         self._id += 1
@@ -179,7 +195,12 @@ class PilCanvas:
         xy = [self.px(x), self.px(y), self.px(x + w), self.px(y + h)]
         rad = self.px(radius)
         if fill:
-            self.d.rounded_rectangle(xy, radius=rad, fill=self._rgba(fill, alpha))
+            col = self._rgba(fill, alpha)
+            if alpha is not None and col[3] < 255:
+                self._blend(xy, lambda d, ox, oy: d.rounded_rectangle(
+                    [xy[0] - ox, xy[1] - oy, xy[2] - ox, xy[3] - oy], radius=rad, fill=col))
+            else:
+                self.d.rounded_rectangle(xy, radius=rad, fill=col)
         if line:
             self.d.rounded_rectangle(xy, radius=rad, outline=self._rgba(line), width=max(1, int(self.px(lw / 72.0))))
         return self.register(x, y, w, h, kind, text)
@@ -189,7 +210,12 @@ class PilCanvas:
             return None
         xy = [self.px(cx - r), self.px(cy - r), self.px(cx + r), self.px(cy + r)]
         if fill:
-            self.d.ellipse(xy, fill=self._rgba(fill, alpha))
+            col = self._rgba(fill, alpha)
+            if alpha is not None and col[3] < 255:
+                self._blend(xy, lambda d, ox, oy: d.ellipse(
+                    [xy[0] - ox, xy[1] - oy, xy[2] - ox, xy[3] - oy], fill=col))
+            else:
+                self.d.ellipse(xy, fill=col)
         if line:
             self.d.ellipse(xy, outline=self._rgba(line), width=max(1, int(self.px(lw / 72.0))))
         return self.register(cx - r, cy - r, 2 * r, 2 * r, "circle")
@@ -197,16 +223,27 @@ class PilCanvas:
     def line(self, x1, y1, x2, y2, color="line", lw=1.5, dash=False, alpha=None):
         if not self.visible():
             return None
+        col = self._rgba(color, alpha)
+        wpx = max(1, int(self.px(lw / 72.0)))
+        segs = []
         if dash:
             n = max(2, int(((x2 - x1) ** 2 + (y2 - y1) ** 2) ** 0.5 / 0.12))
             for i in range(n):
                 t0, t1 = i / n, (i + 0.55) / n
-                self.d.line([self.px(x1 + (x2 - x1) * t0), self.px(y1 + (y2 - y1) * t0),
-                             self.px(x1 + (x2 - x1) * t1), self.px(y1 + (y2 - y1) * t1)],
-                            fill=self._rgba(color, alpha), width=max(1, int(self.px(lw / 72.0))))
+                segs.append([self.px(x1 + (x2 - x1) * t0), self.px(y1 + (y2 - y1) * t0),
+                             self.px(x1 + (x2 - x1) * t1), self.px(y1 + (y2 - y1) * t1)])
         else:
-            self.d.line([self.px(x1), self.px(y1), self.px(x2), self.px(y2)],
-                        fill=self._rgba(color, alpha), width=max(1, int(self.px(lw / 72.0))))
+            segs.append([self.px(x1), self.px(y1), self.px(x2), self.px(y2)])
+        if alpha is not None and col[3] < 255:
+            xs = [s[0] for s in segs] + [s[2] for s in segs]
+            ys = [s[1] for s in segs] + [s[3] for s in segs]
+            def dr(d, ox, oy, _s=segs, _c=col, _w=wpx):
+                for s in _s:
+                    d.line([s[0] - ox, s[1] - oy, s[2] - ox, s[3] - oy], fill=_c, width=_w)
+            self._blend([min(xs), min(ys), max(xs), max(ys)], dr)
+        else:
+            for s in segs:
+                self.d.line(s, fill=col, width=wpx)
         return None
 
     def text(self, x, y, w, h, s, size=14, color="txt2", bold=False, font="body",
@@ -249,7 +286,11 @@ class PilCanvas:
     def image(self, path, x, y, w, h, mode="cover", radius=0.0, border=None):
         if not self.visible():
             return None
-        im = Image.open(path).convert("RGB")
+        im = Image.open(path)
+        if im.mode in ("RGBA", "LA", "PA", "P"):
+            im = im.convert("RGBA")      # conserva la transparencia (PNG de diagramas)
+        else:
+            im = im.convert("RGB")
         if mode == "auto":
             mode = auto_mode(path, w, h)
         tw, th = int(self.px(w)), int(self.px(h))
@@ -263,12 +304,19 @@ class PilCanvas:
             sc = min(tw / im.width, th / im.height)
             im2 = Image.new("RGB", (tw, th), hexcol("panel"))
             r = im.resize((max(1, int(im.width * sc)), max(1, int(im.height * sc))), Image.LANCZOS)
+            if r.mode == "RGBA":
+                im2.paste(r, ((tw - r.width) // 2, (th - r.height) // 2), r)
+            else:
+                im2.paste(r, ((tw - r.width) // 2, (th - r.height) // 2))
             im = im2
-            im.paste(r, ((tw - r.width) // 2, (th - r.height) // 2))
         mask = Image.new("L", (tw, th), 255)
         if radius:
             ImageDraw.Draw(mask).rounded_rectangle([0, 0, tw - 1, th - 1], radius=self.px(radius), fill=255)
-        self.layer.paste(im.convert("RGBA"), (int(self.px(x)), int(self.px(y))), mask)
+        imr = im.convert("RGBA")
+        if im.mode == "RGBA" and im.getchannel("A").getextrema()[0] < 255:
+            from PIL import ImageChops
+            mask = ImageChops.multiply(mask, imr.getchannel("A"))
+        self.layer.paste(imr, (int(self.px(x)), int(self.px(y))), mask)
         if border:
             self.d.rounded_rectangle([self.px(x), self.px(y), self.px(x + w), self.px(y + h)],
                                      radius=self.px(radius), outline=self._rgba(border), width=2)

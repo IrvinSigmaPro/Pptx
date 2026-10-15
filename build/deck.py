@@ -514,8 +514,9 @@ def slide_glossary(c, meta, idx, total, p):
     cols = p.get("cols", 3)
     rows = (len(terms) + cols - 1) // cols
     gap = 0.18
+    note_h = 0.86 if p.get("note") else 0.0
     cw = (W_FULL - gap * (cols - 1)) / cols
-    ch = (BOT - Y0 - gap * (rows - 1)) / rows
+    ch = (BOT - Y0 - note_h - gap * (rows - 1)) / rows
     els = []
     for i, (t, d) in enumerate(terms):
         r, cc = divmod(i, cols)
