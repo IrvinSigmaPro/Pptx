@@ -328,8 +328,8 @@ page()
 # ============================================================ P6 · Thunderbolt + FireWire
 h2("1.4 Thunderbolt")
 rich("**Descripción general:** interfaz de ultra alta velocidad que combina **PCI Express y "
-     "DisplayPort** (más alimentación) en un solo cable.")
-images_side(img("thunderbolt"), 3.15, img("firewire"), 3.15,
+     "DisplayPort** (más alimentación) en un solo cable.", size=10)
+images_side(img("thunderbolt"), 2.85, img("firewire"), 2.85,
             "Thunderbolt: USB-C o Mini DP con icono de rayo ⚡ obligatorio.",
             "FireWire: conectores con borde en «V» y logo de tres ramas.")
 bullets([
@@ -349,17 +349,13 @@ bullets([
     "Versiones de 6 pines (con alimentación), 4 pines (i.LINK) y 9 pines (1394b).",
     "**Velocidad:** FireWire 400 (400 Mbps) y FireWire 800 (800 Mbps). Hasta 63 dispositivos "
     "en cadena, hot-swap y cable de 4.5 m (100 m con fibra).",
-    "**Uso:** videocámaras DV, discos duros externos de audio/vídeo e interfaces de audio "
-    "profesional. Retirado por Apple en 2011; su relevo lo tomaron USB 2.0/3.0, eSATA y "
-    "Thunderbolt."])
-page()
-
-# ============================================================ P7 · PS/2 + DIN-5
+    "**Uso:** videocámaras DV, discos duros externos de audio/vídeo y audio profesional. "
+    "Retirado por Apple en 2011 (le sustituyeron USB, eSATA y Thunderbolt)."])
 doc.add_heading("2 · Puertos de entrada de periféricos", level=1)
 h2("2.1 Puerto PS/2")
 rich("**Descripción general:** conector circular **mini-DIN de 6 pines** para periféricos de "
-     "control (IBM PS/2, 1987), con identificación por código de colores universal estricto.")
-images_side(img("ps2"), 3.3, img("din5"), 2.35,
+     "control (IBM PS/2, 1987), con código de colores universal estricto.", size=10)
+images_side(img("ps2"), 3.0, img("din5"), 2.2,
             "PS/2: morado = teclado, verde = ratón; azul = combo en portátiles.",
             "DIN-5 de teclado AT: conector plateado de 5 pines en media luna.")
 bullets([
@@ -367,7 +363,7 @@ bullets([
     "**Verde: exclusivo para el ratón. Morado / violeta: exclusivo para el teclado.**",
     "**Velocidad:** comunicación directa de **baja latencia** por interrupciones de hardware "
     "(IRQ 1 teclado, IRQ 12 ratón), a 10-16.7 kHz, con +5 V.",
-    "**Uso:** teclados y ratones de conexión directa. Muy apreciado en teclados mecánicos por "
+    "**Uso:** teclados y ratones de conexión directa; muy apreciado en teclados mecánicos por "
     "su NKRO nativo. De los 6 pines solo 4 son activos (DATA, CLK, +5 V, GND); no es hot-plug "
     "en BIOS antiguos."])
 h2("2.2 Conector DIN de 5 pines (teclado AT)")
@@ -421,7 +417,7 @@ bullets([
     "adaptador DVI→HDMI es pasivo y solo transporta video."])
 h2("3.3 HDMI (High-Definition Multimedia Interface)")
 rich("**Descripción general:** estándar de **audio y video digital de alta definición** (2002).")
-image(img("hdmi"), 4.3, "HDMI: Type A estándar, Mini (C) y Micro (D); esquinas biseladas "
+image(img("hdmi"), 4.05, "HDMI: Type A estándar, Mini (C) y Micro (D); esquinas biseladas "
                         "inferiores y marco cromado.")
 bullets([
     "**Aspecto visual:** conector delgado con **esquinas biseladas inferiores**, enmarcado en "
@@ -562,6 +558,15 @@ bullets([
     "(eléctrico frente a óptico)."])
 note("Coaxial: menos jitter, más simple. Óptico: inmune a ruido eléctrico y bucles de tierra. "
      "Para audio sin pérdida multicanal moderno (TrueHD/Atmos), HDMI es la vía recomendada.")
+h2("Datos que suelen faltar · Resumen")
+table(["Parámetro", "Valores prácticos"],
+      [["Alimentación USB", "2.5 W (2.0) → 4.5 W (3.x) → 7.5 W (BC 1.2) → 240 W (USB-C PD 3.1)"],
+       ["Longitudes de cable", "USB 2.0: 5 m · USB 3.x: 2-3 m · USB4/TB: 0.8-2 m · red: 100 m · "
+        "RS-232: 15 m · S/PDIF: 10 m · eSATA: 2 m"],
+       ["PoE (Ethernet)", "802.3af 15.4 W · 802.3at 30 W · 802.3bt 60-100 W"],
+       ["Audio TRRS", "CTIA (estándar de smartphones) y OMTP (antiguo): incompatibles entre sí"],
+       ["Video SD", "Compuesto: 480i/576i multiplexado · S-Video: 480i/576i con Y/C separados"]],
+      [1.75, 5.05], font=9)
 page()
 
 # ============================================================ P15 · eSATA + SD
@@ -580,7 +585,7 @@ bullets([
     "**Uso:** conexión de discos externos con rendimiento idéntico al interno. El eSATA puro "
     "**no aporta alimentación** (requiere fuente externa); desplazado por USB 3.0 desde 2010."])
 h2("6.2 Lectores de Tarjetas (SD / microSD)")
-image(img("sdcard"), 3.85, "Tarjeta SD con pestaña LOCK, microSD y ranura del lector.")
+image(img("sdcard"), 3.5, "Tarjeta SD con pestaña LOCK, microSD y ranura del lector.")
 bullets([
     "**Aspecto visual:** **ranuras finas rectangulares** en el panel frontal o lateral del "
     "chasis, con iconos impresos de tarjetas. La SD lleva **pestaña de bloqueo (LOCK)**; "
@@ -637,9 +642,19 @@ table(["Puerto", "Velocidad típica / máx.", "Tipo", "Aparición", "Estado hoy"
        ["HDMI 2.1", "48 Gbps", "video/audio", "2017", "estándar TV"],
        ["DisplayPort 2.1", "80 Gbps", "video/audio", "2022", "estándar PC"]],
       [1.55, 1.75, 1.35, 0.85, 1.3])
+h2("No confundir · Pares que se parecen")
+bullets([
+    "**RJ-45 vs RJ-11:** 8 contactos (red) frente a 2-4 (teléfono); nunca forzar uno en el otro.",
+    "**USB-C vs Thunderbolt:** conector idéntico; solo el **icono del rayo ⚡** confirma "
+    "Thunderbolt (eGPU, dos pantallas).",
+    "**HDMI vs DisplayPort:** HDMI con dos esquinas biseladas y sin pestillo; DP con una esquina "
+    "y **pestillo de seguridad**.",
+    "**USB-A 2.0 vs 3.0:** misma forma; el color interior (negro vs azul) los delata.",
+    "**DVI-I vs DVI-D:** el DVI-I tiene 4 pines analógicos y adapta a VGA pasivamente.",
+    "**Mini-B vs Micro-B:** Mini-B es más grueso y trapezoidal; Micro-B, fino con rebeles."])
 page()
 
-# ============================================================ P18 · Chuleta de colores
+# ============================================================ P18 · Chuleta + glosario
 h2("Chuleta de colores de identificación")
 para("Lo primero que se mira al conectar un cable: el color.", size=9.5, color=GRAY, italic=True)
 table(["Color / elemento", "Qué indica", "Dónde se ve"],
@@ -660,60 +675,20 @@ table(["Color / elemento", "Qué indica", "Dónde se ve"],
        ["Luz roja TOSLINK", "Audio óptico activo (~650 nm)", "conector de fibra óptica"],
        ["Fibra amarilla / aqua", "Monomodo (larga dist.) / multimodo", "cables SFP / LC"],
        ["Ventana rojo oscuro", "Puerto infrarrojo IrDA", "panel frontal de la PC"]],
-      [1.95, 2.6, 2.25])
-page()
-
-# ============================================================ P19 · No confundir
-h2("No confundir · Pares que se parecen")
-bullets([
-    "**RJ-45 vs RJ-11:** mismo lenguaje, distinto tamaño — 8 contactos (red) frente a 2-4 "
-    "(teléfono). Forzar uno en el otro dobla los contactos.",
-    "**USB-C vs Thunderbolt:** conector idéntico; solo el **icono del rayo ⚡** y la "
-    "documentación confirman Thunderbolt. Un USB-C normal no mueve eGPU ni dos pantallas.",
-    "**HDMI vs DisplayPort:** HDMI tiene **dos esquinas biseladas abajo** y sin pestillo; "
-    "DisplayPort tiene **una esquina biselada** y **pestillo de seguridad** arriba.",
-    "**USB-A 2.0 vs 3.0:** misma forma; solo el color interior (negro vs azul) y los 5 contactos "
-    "extra del 3.0 los delatan.",
-    "**DVI-I vs DVI-D:** el DVI-I tiene 4 pines analógicos alrededor de la blade y adapta a VGA "
-    "pasivamente; el DVI-D no.",
-    "**Mini-B vs Micro-B:** Mini-B es más grueso y trapezoidal; Micro-B, fino con rebeles. "
-    "Físicamente incompatibles."])
-h2("Datos que suelen faltar · Resumen")
-table(["Parámetro", "Valores prácticos"],
-      [["Alimentación USB", "2.5 W (2.0) → 4.5 W (3.x) → 7.5 W (BC 1.2) → 240 W (USB-C PD 3.1)"],
-       ["Longitudes de cable", "USB 2.0: 5 m · USB 3.x: 2-3 m · USB4/TB: 0.8-2 m · red: 100 m · "
-        "RS-232: 15 m · S/PDIF: 10 m · eSATA: 2 m"],
-       ["PoE (Ethernet)", "802.3af 15.4 W · 802.3at 30 W · 802.3bt 60-100 W"],
-       ["Audio TRRS", "CTIA (estándar de smartphones) y OMTP (antiguo): incompatibles entre sí"],
-       ["Video SD", "Compuesto: 480i/576i multiplexado · S-Video: 480i/576i con Y/C separados"]],
-      [1.75, 5.05])
-page()
-
-# ============================================================ P20 · Glosario
+      [1.95, 2.6, 2.25], font=8.3)
 h2("Glosario técnico")
-table(["Término", "Definición"],
-      [["Hot-plug", "Conexión y desconexión del periférico con el equipo encendido."],
-       ["TMDS", "Transmisión diferencial minimizada: capa física de DVI y HDMI."],
-       ["ARC / eARC", "Canal de retorno de audio del TV al receptor por HDMI (eARC: sin pérdida)."],
-       ["CEC", "Control remoto único de todos los dispositivos HDMI interconectados."],
-       ["HDCP", "Cifrado de contenido protegido en HDMI/DisplayPort (2.3 para 4K)."],
-       ["DSC", "Display Stream Compression: compresión visual sin pérdida perceptible."],
-       ["Adaptive-Sync", "Sincronización variable de refresco (FreeSync / G-Sync Compatible)."],
-       ["MST / SST", "Multi-Stream (cadena de monitores) / Single-Stream en DisplayPort."],
-       ["UASP", "Protocolo SCSI sobre USB: discos externos un 20-30 % más rápidos."],
-       ["USB Power Delivery", "Negociación de hasta 240 W por USB-C (5-48 V)."],
-       ["Alt Mode", "Modo alternativo USB-C: video (DP/HDMI) o Thunderbolt por el mismo cable."],
-       ["PoE", "Power over Ethernet: alimentación por cable de red (hasta 60-100 W)."],
-       ["T568A / T568B", "Orden de hilos estándar en los conectores RJ-45."],
-       ["SFP / QSFP", "Transceptores modulares de fibra óptica (1-400 Gbps)."],
-       ["LC / MPO", "Conectores de fibra dúplex pequeños / multifibra de datacenter."],
-       ["DDC / EDID", "Identificación del monitor por el cable (plug & play de video)."],
-       ["Y/C (S-Video)", "Luminancia y crominancia separadas para mejor imagen."],
-       ["TRS / TRRS", "Conector de audio de 3 o 4 polos (con micrófono)."],
-       ["S/PDIF", "Interfaz de audio digital de Sony/Philips (óptica o coaxial)."],
-       ["UHS-I/II/III", "Estándares de bus de tarjetas SD (104-624 MB/s)."],
-       ["IrDA SIR/FIR", "Infrarrojo lento (115.2 kbps) y rápido (4 Mbps)."]],
-      [1.75, 5.05], font=9)
+table(["Término", "Definición", "Término", "Definición"],
+      [["Hot-plug", "Conexión en caliente del periférico", "PoE", "Alimentación por cable Ethernet"],
+       ["TMDS", "Capa física de video de DVI/HDMI", "T568A/B", "Orden de hilos del RJ-45"],
+       ["ARC / eARC", "Retorno de audio TV→receptor (HDMI)", "SFP / QSFP", "Transceptores de fibra 1-400 Gbps"],
+       ["CEC", "Un mando para todo el HDMI", "LC / MPO", "Conectores de fibra dúplex / multifibra"],
+       ["HDCP", "Cifrado de contenido (2.3 para 4K)", "DDC / EDID", "Identificación del monitor por cable"],
+       ["Adaptive-Sync", "Refresco variable (FreeSync/G-Sync)", "Y/C", "Luma y croma separadas (S-Video)"],
+       ["UASP", "USB rápido para discos (SCSI)", "TRS / TRRS", "Audio de 3 o 4 polos (con mic)"],
+       ["USB Power Delivery", "Hasta 240 W por USB-C (5-48 V)", "S/PDIF", "Audio digital óptico o coaxial"],
+       ["Alt Mode", "Video/Thunderbolt por USB-C", "UHS-I/II/III", "Bus de tarjetas SD (104-624 MB/s)"],
+       ["MST / SST", "Cadena de monitores DP / simple", "Y/C", "Luma y croma separadas (S-Video)"]],
+      [1.15, 2.25, 1.15, 2.25], font=8.0)
 para("Fin de la guía · Puertos de Comunicación de PC — Guía Completa y Detallada · 2026",
      size=9, color=GRAY, align=WD_ALIGN_PARAGRAPH.CENTER)
 
