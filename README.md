@@ -1,4 +1,62 @@
-# Compuertas Lógicas y Chips Serie 74XX — Versión Mejorada
+# Presentaciones generadas — Pptx
+
+Repositorio de presentaciones técnicas con **transiciones, animaciones de entrada y notas del
+expositor** generadas de forma programática (python-pptx + PIL para vista previa).
+
+---
+
+# 1 · Puertos de Comunicación de PC — Guía Completa y Detallada
+
+Guía completa de los **23 puertos de comunicación** de una computadora, con **imágenes y
+diagramas de identificación de cada puerto**, su **código de colores** y los datos técnicos que
+suelen faltar: potencia, longitudes máximas de cable, pinout, versiones y estándares.
+
+## Archivos entregables
+
+| Archivo | Contenido |
+|---|---|
+| `Puertos de Comunicación de PC - Guía Completa.pptx` | **Presentación final (tema oscuro)**: 56 diapositivas, 16:9, transiciones y animaciones, notas del expositor |
+| `Puertos de Comunicación de PC - Guía Completa (Fondo Claro).pptx` | Versión con **tema claro** para proyector e impresión |
+| `Puertos de Comunicación de PC - Vista Previa.pdf` | Vista previa imprimible (tema oscuro) |
+| `Puertos de Comunicación de PC - Vista Previa (Fondo Claro).pdf` | Vista previa imprimible (tema claro) |
+| `_preview_puertos/slide_001.jpg … slide_056.jpg` | Vista previa individual de cada diapositiva |
+| `_preview_puertos/indice_general.jpg` | Hoja de contactos con las 56 láminas |
+
+## Estructura del contenido (7 bloques)
+
+| Sección | Diapositivas | Tema |
+|---|---|---|
+| 01 | 1 – 14 | Uso general y datos: USB (tipos, colores, versiones, potencia), RS-232, LPT, Thunderbolt, FireWire |
+| 02 | 15 – 18 | Entrada de periféricos: PS/2 (verde/morado), DIN-5 AT, Game Port DA-15 y MIDI |
+| 03 | 19 – 29 | Video: VGA, DVI, HDMI (+versiones y funciones), DisplayPort, S-Video, compuesto y tabla comparativa |
+| 04 | 30 – 36 | Red: RJ-45, categorías de cable/PoE, RJ-11, SFP/SFP+ y familia QSFP |
+| 05 | 37 – 42 | Audio: jack 3.5 mm (código de colores), TOSLINK y S/PDIF coaxial |
+| 06 | 43 – 47 | Almacenamiento: eSATA/eSATAp, lectores SD/microSD, UHS y SD Express |
+| 07 | 48 – 56 | IrDA, tabla maestra de velocidades, chuleta de colores, «no confundir», línea de tiempo y glosario |
+
+## Imágenes y diagramas
+
+* **25 diagramas técnicos** dibujados a medida (`build/gfx_ports.py`) con los **colores reales de
+  identificación**: lengüetas USB (blanca/negra/azul/roja), PS/2 verde y morado, VGA azul,
+  LPT burdeos, RCA amarillo, jacks de audio por color, LEDs de RJ-45, luz roja de TOSLINK/IrDA, etc.
+* **Fotografías** de portada, secciones y puertos concretos (`_assets/ports_photos/`).
+* Cada puerto tiene su **ficha**: diagrama + identificación visual y color + velocidad y
+  estándares + uso y datos adicionales + nota técnica con lo que suelen omitir las guías.
+
+## Reproducir el build
+
+```bash
+python3 -m venv .venv && .venv/bin/pip install python-pptx Pillow lxml
+cd build
+.venv/bin/python gfx_ports.py dark     # diagramas (tema oscuro)
+.venv/bin/python gfx_ports.py light    # diagramas (tema claro)
+.venv/bin/python build_ports.py        # PPTX + vista previa + PDF (oscuro)
+.venv/bin/python build_ports.py --light
+```
+
+---
+
+# 2 · Compuertas Lógicas y Chips Serie 74XX — Versión Mejorada
 
 Presentación de **Electrónica Digital** ampliada de 13 a **100 diapositivas**, con diseño 16:9,
 imágenes y diagramas técnicos nuevos, y **transiciones + animaciones de entrada nativas de
@@ -48,41 +106,14 @@ PowerPoint** en las 100 láminas.
 ## Imágenes y diagramas
 
 * 47 diagramas técnicos generados para esta guía: símbolos ANSI de las 7 compuertas, tablas de
-  verdad, **pinouts DIP-14** (7400, 7402, 7404, 7408, 7432, 7486, 74266), diagramas de tiempos,
-  márgenes de ruido, fan-out, medio/full adder, sumador de 4 bits, MUX, decodificador,
-  codificador, display de 7 segmentos, latch SR, flip-flop D, contadores, registro de
-  desplazamiento, familias lógicas, montaje en protoboard, ESD y más.
-* Fotografías del archivo original del usuario (chips DIP, panel didáctico, oblea de silicio,
-  placa con integrados), con su crédito correspondiente.
+  verdad, diagramas de tiempo, pinouts DIP-14 de los chips 74XX, sumadores, multiplexores,
+  decodificadores, flip-flops, contadores y memorias.
+* Fotografías y renders de laboratorio, protoboard y encapsulados.
 
-## Cómo regenerar la presentación
+## Reproducir el build
 
 ```bash
 cd build
-python3 gfx.py          # regenera los 47 diagramas en _assets/gen
-python3 build_all.py    # construye el PPTX y la vista previa (_preview/*.jpg)
-python3 build_all.py --pptx      # solo el PPTX
-python3 build_all.py --preview   # solo las imágenes de vista previa
+.venv/bin/python build_all.py            # PPTX + vista previa (tema oscuro)
+.venv/bin/python build_all.py --light    # tema claro
 ```
-
-Requiere `python-pptx` y `Pillow`. La capa de diseño (`layouts.py`, `deck.py`) es común a los dos
-"backends" (`canvas.py`): el mismo código produce el PPTX animado y la imagen de vista previa,
-por lo que la vista previa reproduce fielmente el resultado final.
-
-| Módulo | Responsabilidad |
-|---|---|
-| `theme.py` | Paleta, tipografías, geometría y acentos por sección |
-| `canvas.py` | Primitivas de dibujo con doble backend (PPTX / PIL) |
-| `layouts.py` | Arquetipos visuales (tarjetas, tablas, rejillas, líneas de tiempo…) |
-| `deck.py` | Composición de cada tipo de diapositiva y grupos de animación |
-| `gfx.py` | Generación de los diagramas técnicos en PNG |
-| `content1…content7.py` | Texto y datos de las 100 diapositivas |
-| `anim.py` | Transiciones y animaciones OOXML (timing nativo de PowerPoint) |
-| `build_all.py` | Ensamblado final del PPTX y de la vista previa |
-
-## Nota sobre los datos técnicos
-
-Los parámetros eléctricos provienen de hojas de datos de la subfamilia **74LS** (VCC = 5 V,
-VIH ≥ 2.0 V, VIL ≤ 0.8 V, VOL ≤ 0.4 V, VOH ≥ 2.4 V, tPD ≈ 8–15 ns, fan-out 10). Para uso
-industrial se recomienda verificarlos contra la hoja de datos del fabricante específico antes de
-publicarlos en un reporte técnico.
