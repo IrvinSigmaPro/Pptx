@@ -4,7 +4,7 @@
 
 | Archivo | Contenido |
 |---|---|
-| `../Reporte-Fotosintesis.docx` | **Reporte final integrado**: secciones A–E en el orden de la guía, 14 figuras (diagramas, apuntes escaneados, maqueta 3D, tabla e infografía), 2 tablas y bibliografía APA |
+| `../Reporte-Fotosintesis.docx` | **Reporte visual**: secciones A–E con las 14 imágenes en orden (apuntes, diagramas, maqueta, tabla e infografía), sin párrafos de relleno, y bibliografía APA |
 | `fotos/` | Fotografías de los apuntes y de la maqueta del cloroplasto, ya recortadas y optimizadas |
 | `../Tabla-Autotrofos-Heterotrofos.png` | **Tabla comparativa en imagen** (13 características): autótrofos vs. heterótrofos |
 | `../Infografia-Fotosintesis.png` | **Infografía vertical** (estilo Canva, tema de la guía): participación de los organismos autótrofos en las cadenas tróficas |
