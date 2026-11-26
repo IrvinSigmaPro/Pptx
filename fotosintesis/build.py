@@ -117,26 +117,14 @@ def build_docx(path):
             doc.add_paragraph(it, style="List Number")
 
     def figure(fname, caption, width=6.0, folder=ASSETS, rotate=0):
-        """Inserta una imagen ajustada al ancho de la caja de texto."""
+        """Inserta una imagen ajustada al ancho, sin pie de foto."""
         ruta = os.path.join(folder, fname)
         if not os.path.exists(ruta):
-            p(f"[Espacio para la figura: {caption}]", italic=True, align=WD_ALIGN_PARAGRAPH.CENTER)
             return
-        if rotate:
-            from PIL import Image as _Im
-            tmp = ruta.replace(".png", f"_r{rotate}.png")
-            if not os.path.exists(tmp):
-                _Im.open(ruta).rotate(rotate, expand=True).save(tmp)
-            ruta = tmp
         par = doc.add_paragraph()
         par.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        par.paragraph_format.space_after = DPt(4)
+        par.paragraph_format.space_after = DPt(10)
         par.add_run().add_picture(ruta, width=DInches(width))
-        cap = p(caption, italic=True, align=WD_ALIGN_PARAGRAPH.CENTER)
-        for r in cap.runs:
-            r.font.size = DPt(9.5)
-            r.font.color.rgb = DRGB(0x55, 0x55, 0x55)
-        cap.paragraph_format.space_after = DPt(14)
 
     # ---------------------------------------------------------------- portada
     t = doc.add_paragraph()
@@ -162,27 +150,27 @@ def build_docx(path):
 
     # ---------------------------------------------------------------- A
     h("A. Introducción")
-    figure("evidencia_1_proceso.jpg", "Figura 1. El proceso de la fotosíntesis: introducción, fase luminosa y ciclo de Calvin.", folder=FOTOS, width=5.2)
-    figure("correlacion.png", "Figura 2. Diagrama de correlación sobre la fotosíntesis: factores necesarios y productos del proceso.", width=6.2)
-    figure("evidencia_4_cloroplasto.jpg", "Figura 3. El cloroplasto: doble membrana, tilacoides, grana y estroma.", folder=FOTOS, width=5.2)
-    figure("cloroplasto.png", "Figura 4. Estructura del cloroplasto, reactor celular de la fotosíntesis.", width=6.2)
+    figure("evidencia_1_proceso.jpg", "", folder=FOTOS, width=5.4)
+    figure("cloroplasto_nota.jpg", "", folder=FOTOS, width=6.2)
+    figure("correlacion.png", "", width=6.2)
+    figure("cloroplasto.png", "", width=6.2)
 
     # ---------------------------------------------------------------- B
     h("B. Justificación")
-    figure("evidencia_2_justificacion.jpg", "Figura 5. Justificación: transferencia de energía, captura de dióxido de carbono y liberación de oxígeno.", folder=FOTOS, width=5.2)
+    figure("evidencia_2_justificacion.jpg", "", folder=FOTOS, width=5.4)
 
     # ---------------------------------------------------------------- C
     h("C. Desarrollo")
     h("C.1. Estructura tridimensional del cloroplasto", level=2)
-    figure("maqueta_cloroplasto.jpg", "Figura 6. Estructura tridimensional del cloroplasto: maqueta elaborada y rotulada (evidencia fotográfica).", folder=FOTOS, width=6.2)
+    figure("fase_luminosa.png", "", width=6.2)
     h("C.2. Procesos bioquímicos: fase luminosa y ciclo de Calvin", level=2)
-    figure("fase_luminosa.png", "Figura 7. Fase luminosa en la membrana del tilacoide: fotosistemas, cadena de transporte y síntesis de ATP y NADPH.", width=6.2)
-    figure("calvin.png", "Figura 8. Ciclo de Calvin en el estroma: fijación, reducción y regeneración.", width=6.2)
+    figure("calvin.png", "", width=6.2)
+    figure("relacion_fases.jpg", "", folder=FOTOS, width=6.2)
     h("C.3. Participación del dióxido de carbono y del oxígeno", level=2)
-    figure("evidencia_3_procesos_co2.jpg", "Figura 9. Procesos bioquímicos y dióxido de carbono: fijación, reducción, regeneración y participación del oxígeno.", folder=FOTOS, width=5.2)
-    figure("gases.png", "Figura 10. Participación del dióxido de carbono y del oxígeno en la fotosíntesis.", width=6.2)
+    figure("evidencia_3_procesos_co2.jpg", "", folder=FOTOS, width=5.4)
+    figure("gases.png", "", width=6.2)
     h("C.4. Evidencia fotográfica de la maqueta / modelo 3D del cloroplasto", level=2)
-    figure("evidencia_4_cloroplasto.jpg", "Figura 11. Apunte de la estructura tridimensional del cloroplasto.", folder=FOTOS, width=5.2)
+    figure("maqueta_cloroplasto.jpg", "", folder=FOTOS, width=6.2)
     h("C.5. Video explicativo de 2 a 3 minutos", level=2)
     p("Enlace del video: ______________________________________________", align=WD_ALIGN_PARAGRAPH.CENTER)
 
@@ -218,12 +206,11 @@ def build_docx(path):
         r.cells[0].width = DInches(1.35)
         r.cells[1].width = DInches(2.55)
         r.cells[2].width = DInches(2.55)
-    p("Tabla 1. Comparación de las características de los organismos autótrofos y heterótrofos.", italic=True, align=WD_ALIGN_PARAGRAPH.CENTER)
     h("D.2. Infografía: los autótrofos en las cadenas tróficas", level=2)
-    figure("infografia_p1.png", "Figura 12. Infografía (parte 1 de 2): cadenas tróficas, autótrofos, niveles tróficos y participación.", width=4.7)
-    figure("infografia_p2.png", "Figura 13. Infografía (parte 2 de 2): flujo de energía, ejemplos de cadenas, red trófica y conclusión.", width=4.7)
+    figure("infografia_p1.png", "", width=4.7)
+    figure("infografia_p2.png", "", width=4.7)
     h("D.3. Conclusión", level=2)
-    figure("evidencia_5_conclusion.jpg", "Figura 14. Conclusión: la fotosíntesis y su importancia para la transferencia de energía en la cadena trófica.", folder=FOTOS, width=5.2)
+    figure("evidencia_5_conclusion.jpg", "", folder=FOTOS, width=5.4)
 
     # ---------------------------------------------------------------- E
 
