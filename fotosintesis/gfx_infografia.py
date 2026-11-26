@@ -242,4 +242,11 @@ tc((620, H-55), "Los autótrofos: la puerta de entrada de la energía a los ecos
 
 p = os.path.join(OUT, "infografia.png")
 img.save(p)
+
+# --- mitades para insertar en el reporte (corte en franja vacía)
+cut = 2195
+solape = 60
+img.crop((0, 0, W, cut + solape)).save(os.path.join(OUT, "infografia_p1.png"))
+img.crop((0, cut - solape, W, H)).save(os.path.join(OUT, "infografia_p2.png"))
+
 print("OK", p, img.size)

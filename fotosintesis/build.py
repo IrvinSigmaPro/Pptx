@@ -79,7 +79,14 @@ def build_docx(path):
         shd_el.set(qn("w:fill"), hexcolor)
         tcPr.append(shd_el)
 
+    FOTOS = os.path.join(BASE, "fotos")
+
     doc = Document()
+    for sec in doc.sections:
+        sec.left_margin = DInches(1.0)
+        sec.right_margin = DInches(1.0)
+        sec.top_margin = DInches(0.9)
+        sec.bottom_margin = DInches(0.9)
     st = doc.styles["Normal"]
     st.font.name = "Calibri"
     st.font.size = DPt(12)
@@ -109,9 +116,27 @@ def build_docx(path):
         for it in items:
             doc.add_paragraph(it, style="List Number")
 
-    def figure(fname, caption):
-        # Espacio reservado para la figura (sin imagen incrustada).
-        p(f"[Espacio para la figura: {caption}]", italic=True, align=WD_ALIGN_PARAGRAPH.CENTER)
+    def figure(fname, caption, width=6.0, folder=ASSETS, rotate=0):
+        """Inserta una imagen ajustada al ancho de la caja de texto."""
+        ruta = os.path.join(folder, fname)
+        if not os.path.exists(ruta):
+            p(f"[Espacio para la figura: {caption}]", italic=True, align=WD_ALIGN_PARAGRAPH.CENTER)
+            return
+        if rotate:
+            from PIL import Image as _Im
+            tmp = ruta.replace(".png", f"_r{rotate}.png")
+            if not os.path.exists(tmp):
+                _Im.open(ruta).rotate(rotate, expand=True).save(tmp)
+            ruta = tmp
+        par = doc.add_paragraph()
+        par.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        par.paragraph_format.space_after = DPt(4)
+        par.add_run().add_picture(ruta, width=DInches(width))
+        cap = p(caption, italic=True, align=WD_ALIGN_PARAGRAPH.CENTER)
+        for r in cap.runs:
+            r.font.size = DPt(9.5)
+            r.font.color.rgb = DRGB(0x55, 0x55, 0x55)
+        cap.paragraph_format.space_after = DPt(14)
 
     # ---------------------------------------------------------------- portada
     t = doc.add_paragraph()
@@ -144,9 +169,10 @@ def build_docx(path):
     p("El reactor celular donde se lleva a cabo la fotosíntesis es el cloroplasto, un orgánulo presente en las células de las plantas y de las algas. En las bacterias fotosintéticas, que no poseen cloroplastos, el proceso ocurre en la membrana plasmática. Dentro del cloroplasto se distinguen dos fases relacionadas: la fase luminosa o fotoquímica, que ocurre en la membrana de los tilacoides y requiere luz directa, y el ciclo de Calvin o fase oscura, que ocurre en el estroma y no necesita luz directa, aunque sí depende de los productos de la fase luminosa.")
     p("El estudio de la fotosíntesis se desarrolló a lo largo de varios siglos. En el siglo XVIII, Joseph Priestley demostró que las plantas «restauraban» el aire alterado por la respiración de los animales; Jan Ingenhousz comprobó que este efecto solo ocurría en presencia de luz; Nicolas-Théodore de Saussure estableció que el agua y el dióxido de carbono son las materias primas del proceso; y en el siglo XX, Melvin Calvin describió el ciclo que lleva su nombre y explica cómo se fija el carbono. Estos antecedentes muestran que la fotosíntesis es el resultado de una larga historia de investigación científica.")
     p("En síntesis, la fotosíntesis correlaciona la energía solar, el agua, el dióxido de carbono y la clorofila para producir glucosa y oxígeno. El diagrama de correlación de la Figura 1 resume esta relación: sin ninguno de estos factores el proceso no puede realizarse, y sus productos sostienen la vida de los organismos autótrofos y heterótrofos.")
-    figure("correlacion.png", "Figura 1. Diagrama de correlación sobre la fotosíntesis: factores necesarios y productos del proceso.")
-    p("El cloroplasto, como reactor de la fotosíntesis, recibe materia (dióxido de carbono y agua) y energía (luz solar), y produce glucosa y oxígeno. Su estructura interna está organizada para que ambas fases del proceso ocurran de manera ordenada: la fase luminosa en los tilacoides y el ciclo de Calvin en el estroma (Figura 2).")
-    figure("cloroplasto.png", "Figura 2. Estructura del cloroplasto, reactor celular de la fotosíntesis.")
+    figure("correlacion.png", "Figura 1. Diagrama de correlación sobre la fotosíntesis: factores necesarios y productos del proceso.", width=6.4)
+    figure("evidencia_1_proceso.jpg", "Figura 2. Apunte del proceso de la fotosíntesis: introducción, fase luminosa y ciclo de Calvin.", folder=FOTOS, width=5.0)
+    p("El cloroplasto, como reactor de la fotosíntesis, recibe materia (dióxido de carbono y agua) y energía (luz solar), y produce glucosa y oxígeno. Su estructura interna está organizada para que ambas fases del proceso ocurran de manera ordenada: la fase luminosa en los tilacoides y el ciclo de Calvin en el estroma (Figura 3).")
+    figure("cloroplasto.png", "Figura 3. Estructura del cloroplasto, reactor celular de la fotosíntesis.")
 
     # ---------------------------------------------------------------- metodología
     h("Metodología")
@@ -154,7 +180,7 @@ def build_docx(path):
     numbered([
         "Investigación documental: se consultaron libros de texto de biología y fisiología vegetal (Campbell et al., 2017; Taiz et al., 2018; Raven et al., 2005), así como fuentes institucionales confiables (CONABIO, OpenStax).",
         "Elaboración de diagramas propios: se diseñaron diagramas de correlación, de la estructura del cloroplasto, de la fase luminosa, del ciclo de Calvin y del intercambio de gases, para explicar el proceso con apoyos visuales.",
-        "Construcción de una estructura tridimensional: se elaboró una maqueta del cloroplasto con materiales reciclados (plastilina, unicel y cartón) para representar su forma y sus estructuras internas.",
+        "Construcción de una estructura tridimensional: se elaboró una maqueta del cloroplasto con materiales moldeables y reciclados, rotulada con los nombres de sus estructuras y acompañada de un esquema del intercambio de gases.",
         "Análisis comparativo: se compararon las características de los organismos autótrofos y heterótrofos en una tabla, y se analizó la participación de los autótrofos en las cadenas tróficas.",
         "Redacción y revisión: el texto se redactó en lenguaje formal, con coherencia y sin errores, integrando ejemplos pertinentes, y las fuentes se registraron en formato APA.",
     ])
@@ -164,6 +190,7 @@ def build_docx(path):
     h("B.1. Importancia de la transferencia de energía", level=2)
     p("La fotosíntesis es la única vía por la que la energía solar entra a los ecosistemas. Convierte energía luminosa en energía química (glucosa), que puede almacenarse en forma de almidón o celulosa y transferirse de un organismo a otro a través de las cadenas tróficas. En cada eslabón de la cadena —productores, herbívoros, carnívoros y descomponedores— se transfiere aproximadamente el 10 % de la energía, y el resto se pierde como calor. Por ello, la fotosíntesis es el fundamento de todo flujo de energía en la biosfera.")
     p("Ejemplo claro: el pasto de un potrero capta la energía del Sol mediante la fotosíntesis; una vaca se alimenta de ese pasto y transfiere parte de la energía a su cuerpo; el ser humano consume carne o leche de la vaca y recibe esa misma energía originada en el Sol. Otro ejemplo: los combustibles fósiles como el carbón y el petróleo provienen de restos de organismos fotosintéticos que vivieron hace millones de años, por lo que la energía que utilizamos hoy también proviene, en última instancia, de la fotosíntesis.")
+    figure("evidencia_2_justificacion.jpg", "Figura 4. Apunte de la justificación: transferencia de energía, captura de CO₂ y liberación de oxígeno.", folder=FOTOS, width=5.0)
     h("B.2. Importancia de la captura de dióxido de carbono", level=2)
     p("Durante la fotosíntesis, las plantas capturan dióxido de carbono de la atmósfera y lo incorporan a sus tejidos. Los bosques, las selvas y los océanos —gracias al fitoplancton— absorben grandes cantidades de CO₂, lo que ayuda a mitigar el cambio climático y a regular la temperatura del planeta. Cuando los organismos mueren y se descomponen, parte de ese carbono queda almacenado en el suelo o en los sedimentos.")
     p("Ejemplo claro: la selva amazónica y los bosques de México capturan millones de toneladas de CO₂ al año; asimismo, las algas microscópicas del océano realizan cerca de la mitad de la fotosíntesis mundial. Proteger estos ecosistemas es, por tanto, una medida directa contra el calentamiento global.")
@@ -176,6 +203,7 @@ def build_docx(path):
     h("C.1. Estructura tridimensional del cloroplasto", level=2)
     p("El cloroplasto es un orgánulo de forma ovalada, de 4 a 6 micrómetros de longitud, rodeado por dos membranas. Su forma tridimensional —un elipsoide con estructuras internas ordenadas— maximiza la superficie disponible para captar la luz y realizar las reacciones químicas. Cada célula vegetal puede contener entre 10 y 100 cloroplastos, según la especie y la intensidad de la luz.")
     p("La membrana externa es permeable y delimita el orgánulo; la membrana interna regula el paso de sustancias; y entre ambas se encuentra el espacio intermembrana. En el interior se encuentra el estroma, un fluido que contiene el ADN circular del cloroplasto, ribosomas propios y gránulos de almidón. Sumergidos en el estroma se encuentran los tilacoides, sacos aplanados cuya membrana contiene la clorofila y las proteínas de la fase luminosa. Los tilacoides se agrupan en pilas llamadas grana (singular: grano) y se conectan entre sí mediante lamelas, que permiten el flujo de electrones y protones entre las pilas.")
+    figure("evidencia_4_cloroplasto.jpg", "Figura 5. Apunte de la estructura tridimensional del cloroplasto: doble membrana, tilacoides, grana y estroma.", folder=FOTOS, width=5.0)
     p("La siguiente tabla resume las partes del cloroplasto y su función:")
     table = doc.add_table(rows=1, cols=2)
     table.style = "Light Grid Accent 1"
@@ -203,21 +231,31 @@ def build_docx(path):
         "Formación de NADPH: en el fotosistema I, los electrones excitados se utilizan para formar NADPH.",
         "Quimiosmosis y síntesis de ATP: los protones se acumulan en el interior del tilacoide y, al salir por la ATP sintasa, proporcionan la energía para producir ATP, la «moneda energética» de la célula.",
     ])
-    figure("fase_luminosa.png", "Figura 3. Fase luminosa en la membrana del tilacoide: fotosistemas, cadena de transporte y síntesis de ATP y NADPH.")
+    figure("fase_luminosa.png", "Figura 6. Fase luminosa en la membrana del tilacoide: fotosistemas, cadena de transporte y síntesis de ATP y NADPH.")
     p("El ciclo de Calvin ocurre en el estroma y no necesita luz directa, pero sí depende del ATP y el NADPH producidos en la fase luminosa. Sus pasos principales son los siguientes:")
+    p("El ciclo de Calvin se organiza en tres pasos: fijación del carbono, reducción y regeneración.")
     numbered([
-        "Fijación del carbono: la enzima RuBisCO incorpora una molécula de CO₂ a una molécula de 5 carbonos (RuBP), formando un compuesto inestable que se divide en dos moléculas de 3-PGA.",
-        "Reducción: con la energía del ATP y el NADPH, el 3-PGA se transforma en moléculas de G3P, precursoras de la glucosa.",
-        "Salida del producto: parte del G3P sale del ciclo y se utiliza para formar glucosa, almidón y celulosa.",
-        "Regeneración: el resto del G3P se utiliza para reconstruir la RuBP, de modo que el ciclo puede continuar. Por cada 3 CO₂ fijados se obtiene 1 G3P, y 6 G3P forman 1 molécula de glucosa.",
+        "Fijación del carbono: el CO₂ se une a una molécula de cinco carbonos llamada ribulosa-1,5-bisfosfato (RuBP). Esta reacción la cataliza la enzima RuBisCO, la más abundante en la Tierra, y se forman dos moléculas de 3-PGA (un compuesto de tres carbonos).",
+        "Reducción: las moléculas de 3-PGA se convierten en gliceraldehído-3-fosfato (G3P) utilizando la energía del ATP y el poder reductor del NADPH.",
+        "Regeneración: parte del G3P se utiliza para regenerar la RuBP —de modo que el ciclo puede continuar— y el resto se emplea en la formación de glucosa y otros azúcares.",
     ])
-    figure("calvin.png", "Figura 4. Ciclo de Calvin en el estroma: fijación, reducción, salida y regeneración.")
+    figure("calvin.png", "Figura 7. Ciclo de Calvin en el estroma: fijación, reducción y regeneración.")
+    p("La relación entre ambas fases es de dependencia mutua: la fase luminosa produce ATP y NADPH y libera O₂; el ciclo de Calvin utiliza ese ATP y ese NADPH y fija el CO₂ para formar glucosa. Sin los productos de la fase luminosa, el ciclo de Calvin no puede funcionar.")
+    figure("evidencia_3_procesos_co2.jpg", "Figura 8. Apunte de los procesos bioquímicos y del dióxido de carbono: fijación, reducción, regeneración y participación del oxígeno.", folder=FOTOS, width=5.0)
     h("C.3. Participación del dióxido de carbono y del oxígeno", level=2)
-    p("El dióxido de carbono entra a la hoja por los estomas, pequeños poros regulados por las células oclusivas, y es la fuente de carbono para construir la glucosa. El agua es absorbida por las raíces y asciende hasta las hojas por el xilema. En el cloroplasto, el agua aporta los electrones y el hidrógeno necesarios, y su oxígeno es liberado. El oxígeno producido sale por los estomas hacia la atmósfera, y la glucosa se utiliza de inmediato en la respiración o se almacena como almidón y celulosa. De este modo, la planta realiza un intercambio de gases que equilibra la atmósfera: captura CO₂ y libera O₂ (Figura 5).")
-    figure("gases.png", "Figura 5. Participación del dióxido de carbono y del oxígeno en la fotosíntesis.")
+    p("El dióxido de carbono entra a la hoja por los estomas, pequeños poros regulados por las células oclusivas, llega al estroma del cloroplasto y ahí interviene en el ciclo de Calvin. Su participación puede resumirse así: en la fijación, el CO₂ se une a la RuBP por acción de la RuBisCO y se forman dos moléculas de 3-PGA; en la reducción, el 3-PGA pasa a G3P con el ATP y el NADPH de la fase luminosa; y en la regeneración, parte del G3P reconstruye la RuBP y el resto forma glucosa.")
+    p("La participación del oxígeno ocurre en la fase luminosa, en cuatro momentos:")
+    numbered([
+        "La luz solar mueve los electrones de la clorofila de los fotosistemas.",
+        "Para reponer esos electrones se rompe la molécula de agua mediante la fotólisis: 2 H₂O → 4 H⁺ + 4 e⁻ + O₂.",
+        "El oxígeno (O₂) se libera al exterior a través de los estomas de la hoja.",
+        "La energía de los electrones se utiliza para producir ATP y NADPH.",
+    ])
+    p("De este modo, la planta realiza un intercambio de gases que equilibra la atmósfera: captura CO₂ y libera O₂ (Figura 9).")
+    figure("gases.png", "Figura 9. Participación del dióxido de carbono y del oxígeno en la fotosíntesis.")
     h("C.4. Evidencia fotográfica de la maqueta / modelo 3D del cloroplasto", level=2)
-    p("Para explicar los procesos bioquímicos de manera tridimensional, se elaboró una maqueta del cloroplasto con materiales reciclados: la membrana se representó con plastilina verde, los grana con monedas apiladas, las lamelas con tiras del mismo material, el estroma con un relleno suave y la base con unicel. La fotografía de la Figura 6 muestra la maqueta terminada y rotulada. [Sustituir por la fotografía real de la maqueta elaborada en clase.]")
-    figure("modelo3d.png", "Figura 6. Maqueta tridimensional del cloroplasto (evidencia fotográfica).")
+    p("Para explicar los procesos bioquímicos de manera tridimensional se elaboró una maqueta del cloroplasto con materiales moldeables y reciclados: la doble membrana y el estroma se representaron en el interior del orgánulo, los tilacoides y los granos con piezas verdes superpuestas, y el conjunto se montó sobre una base oscura que simula el interior de la célula vegetal. La maqueta se rotuló con los nombres de las estructuras (membrana externa, membrana interna, tilacoide, grana, ribosomas y gotas de lípidos) y se acompañó de un esquema del intercambio de gases: el CO₂ entra por los estomas, la luz solar aporta energía, se produce glucosa y el O₂ se libera a la atmósfera. La Figura 10 muestra la maqueta terminada.")
+    figure("maqueta_cloroplasto.jpg", "Figura 10. Estructura tridimensional del cloroplasto: maqueta elaborada y rotulada (evidencia fotográfica).", folder=FOTOS, width=6.4)
     h("C.5. Video explicativo de 2 a 3 minutos", level=2)
     p("Como evidencia adicional del aprendizaje, se elaboró un video corto de 2 a 3 minutos de duración, con el siguiente guion:")
     numbered([
@@ -233,6 +271,7 @@ def build_docx(path):
     h("D. Resultados, análisis y conclusión")
     h("D.1. Tabla comparativa: organismos autótrofos y heterótrofos", level=2)
     p("La siguiente tabla compara las características principales de los organismos autótrofos y heterótrofos.")
+    figure("tabla_comparativa.png", "Figura 11. Tabla comparativa de las características de los organismos autótrofos y heterótrofos.", width=6.4)
     table = doc.add_table(rows=1, cols=3)
     table.style = "Table Grid"
     table.alignment = WD_TABLE_ALIGNMENT.CENTER
@@ -265,14 +304,18 @@ def build_docx(path):
         r.cells[2].width = DInches(2.55)
     p("Tabla 1. Comparación de las características de los organismos autótrofos y heterótrofos.", italic=True, align=WD_ALIGN_PARAGRAPH.CENTER)
     h("D.2. Infografía: los autótrofos en las cadenas tróficas", level=2)
-    doc.add_picture(os.path.join(ASSETS, "infografia.png"), width=DInches(4.6))
-    p("Figura 7. Infografía: participación de los organismos autótrofos en las cadenas tróficas.", italic=True, align=WD_ALIGN_PARAGRAPH.CENTER)
+    p("Se elaboró una infografía sobre la participación de los organismos autótrofos en las cadenas tróficas. Para que el contenido se lea con claridad en el documento, se presenta en dos partes consecutivas que, juntas, forman la infografía completa (Figuras 12 y 13).")
+    figure("infografia_p1.png", "Figura 12. Infografía (parte 1 de 2): qué es una cadena trófica, quiénes son los autótrofos, los niveles tróficos y su forma de participación.", width=4.7)
+    figure("infografia_p2.png", "Figura 13. Infografía (parte 2 de 2): flujo de energía (regla del 10 %), ejemplos de cadenas, red trófica y conclusión.", width=4.7)
     h("D.3. Análisis", level=2)
     p("La comparación de la Tabla 1 muestra diferencias claras: los organismos autótrofos producen su propio alimento mediante la fotosíntesis y los heterótrofos dependen de otros seres vivos. Esta diferencia explica por qué los autótrofos ocupan el primer nivel trófico y sostienen a todos los demás: sin productores no habría alimento para los herbívoros, ni para los carnívoros, ni para los descomponedores.")
     p("La estructura del cloroplasto está adaptada a su función como reactor: la gran superficie de tilacoides agrupados en grana maximiza la captura de luz para la fase luminosa, y el estroma amplio proporciona el espacio y las enzimas —como la RuBisCO— para fijar el dióxido de carbono en el ciclo de Calvin. La participación del CO₂ y del O₂ confirma que la fotosíntesis equilibra la atmósfera: captura el gas que los seres vivos liberan al respirar y libera el oxígeno que estos necesitan.")
     p("La maqueta tridimensional facilitó la comprensión de procesos que no se observan a simple vista, ya que permitió visualizar la organización interna del cloroplasto y relacionar cada estructura con su función. Los resultados confirman que la fotosíntesis es el proceso central de la transferencia de energía en los ecosistemas.")
     h("D.4. Conclusión", level=2)
     p("La fotosíntesis es el proceso mediante el cual los organismos autótrofos convierten la energía solar en energía química dentro del cloroplasto. La fase luminosa, en los tilacoides, produce ATP, NADPH y oxígeno; el ciclo de Calvin, en el estroma, fija el dióxido de carbono y forma glucosa. Su importancia para la transferencia de energía en la cadena trófica es fundamental: los productores fotosintéticos son la puerta de entrada de la energía a los ecosistemas, y sin ellos no habría alimento ni oxígeno para los organismos heterótrofos. Además, la captura de CO₂ y la liberación de O₂ hacen de la fotosíntesis un proceso indispensable para el equilibrio del clima y de la atmósfera del planeta.")
+
+    # ---------------------------------------------------------------- E
+    figure("evidencia_5_conclusion.jpg", "Figura 14. Apunte de la conclusión del tema: la fotosíntesis y su importancia para la transferencia de energía en la cadena trófica.", folder=FOTOS, width=5.0)
 
     # ---------------------------------------------------------------- E
     h("E. Bibliografía")
