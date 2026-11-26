@@ -10,7 +10,7 @@ FD = "/usr/share/fonts/truetype/dejavu/"
 def F(size, bold=False):
     return ImageFont.truetype(FD + ("DejaVuSans-Bold.ttf" if bold else "DejaVuSans.ttf"), size)
 
-W, H = 1240, 2770
+W, H = 1240, 4170
 VOSC = (27, 94, 32); V = (46, 125, 50); VC = (102, 187, 106)
 CREMA = (247, 251, 243); TXT = (26, 46, 26)
 GRIS = (97, 97, 97); NAR = (249, 168, 37); AZUL = (21, 101, 192)
@@ -151,6 +151,34 @@ for i, (t, sub, col, pct) in enumerate(niveles):
     x += 265
 y += 225
 body(y, "Los autótrofos son la puerta de entrada de la energía: sin ellos no hay alimento para ningún otro ser vivo.", size=24)
+
+# ---------------------------------------------------------------- 7 Importancia
+y = card(2660, 2990, 7, "Importancia ecológica")
+for i, (t, sub, col) in enumerate([
+    ("CAPTURA CO₂", "mitiga el cambio climático", (120, 120, 120)),
+    ("LIBERA O₂", "el aire que respiramos", AZUL),
+    ("BASE DE LA VIDA", "alimento y energía", VOSC),
+]):
+    x = 110 + i*355
+    d.rounded_rectangle([x, y, x+325, y+150], radius=20, fill=(255, 255, 255), outline=col, width=3)
+    tc((x+162, y+50), t, F(30, True), col)
+    tc((x+162, y+100), sub, F(22), GRIS)
+
+# ---------------------------------------------------------------- 8 Ejemplos
+y = card(3030, 3400, 8, "Ejemplos claros")
+y = body(y, "• Bosques y selvas: capturan millones de toneladas de CO₂ al año y liberan oxígeno.", size=26)
+y += 6
+y = body(y, "• Océanos: el fitoplancton realiza cerca de la mitad de la fotosíntesis mundial.", size=26)
+y += 6
+y = body(y, "• Cultivos: el maíz, el trigo y el arroz producen el alimento de millones de personas.", size=26)
+
+# ---------------------------------------------------------------- 9 Dato curioso
+y = card(3440, 3710, 9, "¿Sabías que...?")
+y = body(y, "El oxígeno que respiramos proviene del agua, no del dióxido de carbono. Además, una sola hectárea de bosque puede producir en un año el oxígeno suficiente para decenas de personas.", size=26)
+
+# ---------------------------------------------------------------- 10 Conclusión
+y = card(3750, 4020, 10, "Conclusión")
+y = body(y, "Sin fotosíntesis no hay energía ni oxígeno: los organismos autótrofos sostienen todas las cadenas tróficas del planeta.", size=26)
 
 # ---------------------------------------------------------------- pie
 d.rectangle([0, H-110, W, H], fill=VOSC)
