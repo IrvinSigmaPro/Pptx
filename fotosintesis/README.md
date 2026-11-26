@@ -4,7 +4,7 @@
 
 | Archivo | Contenido |
 |---|---|
-| `../Reporte-Fotosintesis.docx` | **Reporte visual**: secciones A–E con las 14 imágenes en orden (apuntes, diagramas, maqueta, tabla e infografía), sin párrafos de relleno, y bibliografía APA |
+| `../Reporte-Fotosintesis.docx` | **Reporte visual por placas**: secciones A–E con las imágenes compuestas por página (sin huecos en blanco), 1 tabla y bibliografía APA |
 | `fotos/` | Fotografías de los apuntes y de la maqueta del cloroplasto, ya recortadas y optimizadas |
 | `../Tabla-Autotrofos-Heterotrofos.png` | **Tabla comparativa en imagen** (13 características): autótrofos vs. heterótrofos |
 | `../Infografia-Fotosintesis.png` | **Infografía vertical** (estilo Canva, tema de la guía): participación de los organismos autótrofos en las cadenas tróficas |
@@ -28,3 +28,5 @@ python3 build.py   # genera ../Reporte-Fotosintesis.docx
 ```
 
 Requiere `python-pptx`, `Pillow` y `python-docx`.
+
+- `plates.py`: compone las placas de página (varias imágenes por hoja) usadas en el DOCX.

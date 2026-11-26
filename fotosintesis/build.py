@@ -80,13 +80,14 @@ def build_docx(path):
         tcPr.append(shd_el)
 
     FOTOS = os.path.join(BASE, "fotos")
+    PLACAS = os.path.join(ASSETS, "placas")
 
     doc = Document()
     for sec in doc.sections:
-        sec.left_margin = DInches(1.0)
-        sec.right_margin = DInches(1.0)
-        sec.top_margin = DInches(0.9)
-        sec.bottom_margin = DInches(0.9)
+        sec.left_margin = DInches(0.75)
+        sec.right_margin = DInches(0.75)
+        sec.top_margin = DInches(0.8)
+        sec.bottom_margin = DInches(0.8)
     st = doc.styles["Normal"]
     st.font.name = "Calibri"
     st.font.size = DPt(12)
@@ -136,7 +137,6 @@ def build_docx(path):
     p("Reporte integrado", bold=True, align=WD_ALIGN_PARAGRAPH.CENTER)
     p("Fase luminosa, ciclo de Calvin y el cloroplasto como reactor celular", italic=True, align=WD_ALIGN_PARAGRAPH.CENTER)
     p("Integración del reporte: introducción, metodología, justificación, desarrollo, resultados, análisis, conclusión y bibliografía en formato APA.", align=WD_ALIGN_PARAGRAPH.CENTER)
-    doc.add_page_break()
 
     # ---------------------------------------------------------------- índice
     h("Índice")
@@ -149,32 +149,33 @@ def build_docx(path):
     ])
 
     # ---------------------------------------------------------------- A
+    doc.add_page_break()
     h("A. Introducción")
-    figure("evidencia_1_proceso.jpg", "", folder=FOTOS, width=5.4)
-    figure("cloroplasto_nota.jpg", "", folder=FOTOS, width=6.2)
-    figure("correlacion.png", "", width=6.2)
-    figure("cloroplasto.png", "", width=6.2)
+    figure("a1_proceso_cloroplasto.jpg", "", width=6.5, folder=PLACAS)
+    doc.add_page_break()
+    figure("a2_correlacion_estructura.jpg", "", width=7.0, folder=PLACAS)
 
     # ---------------------------------------------------------------- B
+    doc.add_page_break()
     h("B. Justificación")
-    figure("evidencia_2_justificacion.jpg", "", folder=FOTOS, width=5.4)
+    figure("b1_justificacion.jpg", "", width=6.5, folder=PLACAS)
 
     # ---------------------------------------------------------------- C
+    doc.add_page_break()
     h("C. Desarrollo")
     h("C.1. Estructura tridimensional del cloroplasto", level=2)
-    figure("fase_luminosa.png", "", width=6.2)
+    figure("c1_maqueta.jpg", "", width=6.3, folder=PLACAS)
+    doc.add_page_break()
     h("C.2. Procesos bioquímicos: fase luminosa y ciclo de Calvin", level=2)
-    figure("calvin.png", "", width=6.2)
-    figure("relacion_fases.jpg", "", folder=FOTOS, width=6.2)
+    figure("c2_fases.jpg", "", width=6.6, folder=PLACAS)
+    doc.add_page_break()
     h("C.3. Participación del dióxido de carbono y del oxígeno", level=2)
-    figure("evidencia_3_procesos_co2.jpg", "", folder=FOTOS, width=5.4)
-    figure("gases.png", "", width=6.2)
-    h("C.4. Evidencia fotográfica de la maqueta / modelo 3D del cloroplasto", level=2)
-    figure("maqueta_cloroplasto.jpg", "", folder=FOTOS, width=6.2)
-    h("C.5. Video explicativo de 2 a 3 minutos", level=2)
+    figure("c3_notas_co2_o2.jpg", "", width=5.9, folder=PLACAS)
+    h("C.4. Video explicativo de 2 a 3 minutos", level=2)
     p("Enlace del video: ______________________________________________", align=WD_ALIGN_PARAGRAPH.CENTER)
 
     # ---------------------------------------------------------------- D
+    doc.add_page_break()
     h("D. Resultados, análisis y conclusión")
     h("D.1. Tabla comparativa: organismos autótrofos y heterótrofos", level=2)
     table = doc.add_table(rows=1, cols=3)
@@ -187,7 +188,7 @@ def build_docx(path):
         cp.alignment = WD_ALIGN_PARAGRAPH.CENTER
         r = cp.add_run(val)
         r.bold = True
-        r.font.size = Pt(9.5)
+        r.font.size = Pt(10.5)
         r.font.color.rgb = RGBColor(0xFF, 0xFF, 0xFF)
         shd(hdr[i], "1B5E20")
     for k, row in enumerate(TABLA[1:]):
@@ -195,26 +196,32 @@ def build_docx(path):
         for i, val in enumerate(row):
             cells[i].text = ""
             cp = cells[i].paragraphs[0]
+            cp.paragraph_format.space_after = Pt(4)
+            cp.paragraph_format.space_before = Pt(2)
             r = cp.add_run(val)
-            r.font.size = Pt(9)
+            r.font.size = Pt(10)
             if i == 0:
                 r.bold = True
                 r.font.color.rgb = RGBColor(0x1B, 0x5E, 0x20)
             if k % 2 == 1:
                 shd(cells[i], "EAF3E6")
     for r in table.rows:
-        r.cells[0].width = DInches(1.35)
-        r.cells[1].width = DInches(2.55)
-        r.cells[2].width = DInches(2.55)
+        r.cells[0].width = DInches(1.45)
+        r.cells[1].width = DInches(2.75)
+        r.cells[2].width = DInches(2.75)
+    doc.add_page_break()
     h("D.2. Infografía: los autótrofos en las cadenas tróficas", level=2)
-    figure("infografia_p1.png", "", width=4.7)
-    figure("infografia_p2.png", "", width=4.7)
+    figure("d1_infografia_1.jpg", "", width=6.5, folder=PLACAS)
+    doc.add_page_break()
+    figure("d2_infografia_2.jpg", "", width=7.0, folder=PLACAS)
+    doc.add_page_break()
     h("D.3. Conclusión", level=2)
-    figure("evidencia_5_conclusion.jpg", "", folder=FOTOS, width=5.4)
+    figure("d3_conclusion.jpg", "", width=6.5, folder=PLACAS)
 
     # ---------------------------------------------------------------- E
 
     # ---------------------------------------------------------------- E
+    doc.add_page_break()
     h("E. Bibliografía")
     for ref in REFS:
         par = doc.add_paragraph(ref)
