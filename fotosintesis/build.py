@@ -8,13 +8,45 @@ ASSETS = os.path.join(BASE, "assets")
 
 TABLA = [
     ("Característica", "Organismos autótrofos", "Organismos heterótrofos"),
-    ("Obtención de alimento", "Producen su propio alimento mediante la fotosíntesis (plantas y algas) o la quimiosíntesis (algunas bacterias).", "Obtienen su alimento consumiendo a otros seres vivos, sus restos o sus productos."),
-    ("Fuente de energía", "Energía solar (luz) y, en algunos casos, energía química de compuestos inorgánicos.", "Energía química contenida en los alimentos que consumen."),
-    ("Materia prima", "Dióxido de carbono, agua y sales minerales del ambiente.", "Materia orgánica ya elaborada por otros organismos."),
-    ("Producto principal", "Glucosa y oxígeno; almacenan energía en forma de almidón y celulosa.", "Desechos como dióxido de carbono, urea y heces; liberan calor."),
-    ("Nivel trófico", "Productores: ocupan el primer nivel de las cadenas tróficas.", "Consumidores (herbívoros, carnívoros, omnívoros) y descomponedores: segundo nivel en adelante."),
-    ("Ejemplos", "Plantas, algas, cianobacterias y algunas bacterias fotosintéticas.", "Animales, hongos, protozoarios, bacterias descomponedoras y el ser humano."),
-    ("Importancia ecológica", "Base de las cadenas tróficas; producen oxígeno, capturan CO₂ y forman la materia orgánica de los ecosistemas.", "Regulan las poblaciones de productores, dispersan semillas y reciclan nutrientes mediante la descomposición."),
+    ("Definición",
+     "Seres vivos capaces de sintetizar su propia materia orgánica a partir de sustancias inorgánicas.",
+     "Seres vivos que no pueden sintetizar su alimento y deben tomarlo ya elaborado del medio."),
+    ("Obtención del alimento",
+     "Producen su propio alimento mediante la fotosíntesis (plantas, algas) o la quimiosíntesis (algunas bacterias).",
+     "Obtienen su alimento consumiendo a otros seres vivos, sus restos o sus productos."),
+    ("Fuente de energía",
+     "Energía luminosa del Sol (fotótrofos) o energía química de compuestos inorgánicos (quimiótrofos).",
+     "Energía química almacenada en los enlaces de la materia orgánica que ingieren."),
+    ("Materia prima",
+     "Dióxido de carbono, agua y sales minerales tomados directamente del ambiente.",
+     "Materia orgánica ya elaborada: carbohidratos, grasas y proteínas de otros organismos."),
+    ("Estructuras que intervienen",
+     "Cloroplastos con clorofila, estomas, raíces y vasos conductores.",
+     "Aparato digestivo, boca, dientes, enzimas digestivas; en hongos, hifas absortivas."),
+    ("Proceso característico",
+     "Fotosíntesis (fase luminosa y ciclo de Calvin) o quimiosíntesis.",
+     "Digestión, absorción y respiración celular para liberar la energía del alimento."),
+    ("Productos principales",
+     "Glucosa y oxígeno; almacenan la energía en forma de almidón, celulosa o aceites.",
+     "Dióxido de carbono, agua, urea y calor; utilizan la energía para crecer y moverse."),
+    ("Dependencia de otros organismos",
+     "No dependen de otros seres vivos para alimentarse: son autosuficientes.",
+     "Dependen directa o indirectamente de los autótrofos para obtener alimento y oxígeno."),
+    ("Nivel trófico",
+     "Productores: ocupan el primer nivel de las cadenas y redes tróficas.",
+     "Consumidores (herbívoros, carnívoros, omnívoros) y descomponedores: segundo nivel en adelante."),
+    ("Papel en el ciclo del carbono",
+     "Fijan el CO₂ atmosférico y lo incorporan a la materia orgánica: son un sumidero de carbono.",
+     "Liberan CO₂ a la atmósfera mediante la respiración y la descomposición."),
+    ("Movilidad",
+     "En su mayoría sésiles (fijos al sustrato), aunque algunas algas y bacterias se desplazan.",
+     "En su mayoría móviles; se trasladan en busca de alimento, refugio o pareja."),
+    ("Ejemplos",
+     "Plantas, algas, fitoplancton, cianobacterias y bacterias fotosintéticas o quimiosintéticas.",
+     "Animales, hongos, protozoarios, bacterias descomponedoras y el ser humano."),
+    ("Importancia ecológica",
+     "Base de todas las cadenas tróficas: producen oxígeno, capturan CO₂ y originan la materia orgánica de los ecosistemas.",
+     "Regulan las poblaciones de otros organismos, dispersan semillas, polinizan y reciclan nutrientes."),
 ]
 
 REFS = [
@@ -29,8 +61,23 @@ REFS = [
 
 def build_docx(path):
     from docx import Document
-    from docx.shared import Pt as DPt, Inches as DInches, RGBColor as DRGB
+    from docx.shared import Pt, Inches as DInches, RGBColor
     from docx.enum.text import WD_ALIGN_PARAGRAPH
+    from docx.enum.table import WD_TABLE_ALIGNMENT
+    from docx.oxml.ns import qn
+    from docx.oxml import OxmlElement
+
+    Pt = Pt
+    DPt = Pt
+    DRGB = RGBColor
+
+    def shd(cell, hexcolor):
+        tcPr = cell._tc.get_or_add_tcPr()
+        shd_el = OxmlElement("w:shd")
+        shd_el.set(qn("w:val"), "clear")
+        shd_el.set(qn("w:color"), "auto")
+        shd_el.set(qn("w:fill"), hexcolor)
+        tcPr.append(shd_el)
 
     doc = Document()
     st = doc.styles["Normal"]
@@ -185,15 +232,37 @@ def build_docx(path):
     # ---------------------------------------------------------------- D
     h("D. Resultados, análisis y conclusión")
     h("D.1. Tabla comparativa: organismos autótrofos y heterótrofos", level=2)
+    p("La siguiente tabla compara las características principales de los organismos autótrofos y heterótrofos.")
     table = doc.add_table(rows=1, cols=3)
-    table.style = "Light Grid Accent 1"
+    table.style = "Table Grid"
+    table.alignment = WD_TABLE_ALIGNMENT.CENTER
     hdr = table.rows[0].cells
     for i, val in enumerate(TABLA[0]):
-        hdr[i].text = val
-    for row in TABLA[1:]:
+        hdr[i].text = ""
+        cp = hdr[i].paragraphs[0]
+        cp.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        r = cp.add_run(val)
+        r.bold = True
+        r.font.size = Pt(9.5)
+        r.font.color.rgb = RGBColor(0xFF, 0xFF, 0xFF)
+        shd(hdr[i], "1B5E20")
+    for k, row in enumerate(TABLA[1:]):
         cells = table.add_row().cells
         for i, val in enumerate(row):
-            cells[i].text = val
+            cells[i].text = ""
+            cp = cells[i].paragraphs[0]
+            r = cp.add_run(val)
+            r.font.size = Pt(9)
+            if i == 0:
+                r.bold = True
+                r.font.color.rgb = RGBColor(0x1B, 0x5E, 0x20)
+            if k % 2 == 1:
+                shd(cells[i], "EAF3E6")
+    # anchos de columna
+    for r in table.rows:
+        r.cells[0].width = DInches(1.35)
+        r.cells[1].width = DInches(2.55)
+        r.cells[2].width = DInches(2.55)
     p("Tabla 1. Comparación de las características de los organismos autótrofos y heterótrofos.", italic=True, align=WD_ALIGN_PARAGRAPH.CENTER)
     h("D.2. Infografía: los autótrofos en las cadenas tróficas", level=2)
     doc.add_picture(os.path.join(ASSETS, "infografia.png"), width=DInches(4.6))

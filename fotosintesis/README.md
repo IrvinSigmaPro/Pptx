@@ -5,6 +5,7 @@
 | Archivo | Contenido |
 |---|---|
 | `../Reporte-Fotosintesis.docx` | **Reporte en texto**: secciones A–E de la guía, espacios marcados para las figuras 1–6, **infografía incrustada en la sección D.2**, 2 tablas y bibliografía en formato APA |
+| `../Tabla-Autotrofos-Heterotrofos.png` | **Tabla comparativa en imagen** (13 características): autótrofos vs. heterótrofos |
 | `../Infografia-Fotosintesis.png` | **Infografía vertical** (estilo Canva, tema de la guía): participación de los organismos autótrofos en las cadenas tróficas |
 
 ## Contenido del reporte
